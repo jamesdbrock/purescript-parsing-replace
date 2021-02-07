@@ -9,7 +9,13 @@
 -- | size is modest, the pattern is complicated, and readability and
 -- | maintainability are more important than speed.
 module Text.Parsing.Parser.String.Replace
-  (match)
+  ( match
+  , breakCap
+  , breakCapT
+  , anyTill
+  , manyTill_
+  , many1Till_
+  )
 where
 
 import Prelude
@@ -38,6 +44,12 @@ match p = do
   ParseState input1 _ _ <- get
   x <- p
   ParseState input2 _ _ <- get
+  -- We use the Javascript `length`, which is in
+  -- [units of “code units”](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length),
+  -- instead of `Data.String.length`. which is in
+  -- [units of “code points”](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String#v:length).
+  -- This is more efficient, and it will be correct as long as we can assume
+  -- that the `ParseState input` always begins on a code point boundary.
   pure $ Tuple (CodeUnits.take (CodeUnits.length input1 - CodeUnits.length input2) input1) x
 
 -- | Parse several phrases until the specified terminator matches.
@@ -112,14 +124,14 @@ breakCapT sep input = hush <$> runParserT input go
 -- | ahead; if the `sep` parser looks to the end of the input then `breakCap`
 -- | could be *O(n²)*.
 -- |
--- | ## Output
+-- | #### Output
 -- |
 -- | - `Nothing` when no pattern match was found.
 -- | - `Just (prefix, parse_result, suffix)` for the result of parsing the
 -- |   pattern match, and the `prefix` string before and the `suffix` string
 -- |   after the pattern match. `prefix` and `suffix` may be zero-length strings.
 -- |
--- | ## Access the matched section of text
+-- | #### Access the matched section of text
 -- |
 -- | If you want to capture the matched string, then combine the pattern
 -- | parser `sep` with `match`.
