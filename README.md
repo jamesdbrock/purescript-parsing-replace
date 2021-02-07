@@ -1,6 +1,28 @@
 __parsing-string-replace__ is for finding text patterns, and also for replacing
 or splitting on the found patterns.
 
+__parsing-string-replace__ is for finding text patterns, and also
+replacing or splitting on the found patterns.
+This activity is traditionally done with regular expressions,
+but __parsing-string-replace__ uses
+__parsing__ parsers instead for the pattern matching.
+
+
+__parsing-string-replace__ can be used in the same sort of *“pattern capture”*
+or *“find all”* situations in which one would use
+[`Data.String.Regex.match`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:match).
+
+
+__parsing-string-replace__ can be used in the same sort of “stream editing”
+or “search-and-replace” situations in which one would use
+[`Data.String.Regex.replace'`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:replace')
+or
+[`Data.String.Regex.search`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:search).
+
+__parsing-string-replace__ can be used in the same sort of “string splitting”
+situations in which one would use
+[`Data.String.Regex.split`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:split).
+
 See [__replace-megaparsec__](https://hackage.haskell.org/package/replace-megaparsec)
 for the Haskell
 [__megaparsec__](http://hackage.haskell.org/package/megaparsec)
@@ -10,3 +32,45 @@ See [__replace-attoparsec__](https://hackage.haskell.org/package/replace-attopar
 for the Haskell
 [__attoparsec__](http://hackage.haskell.org/package/attoparsec)
 version.
+
+We can expect the performance of parser-based find-and-replace to be
+worse than regex-based find-and-replace in a JavaScript
+runtime environment. This module is intended for use when the input
+size is modest, the pattern is complicated, and readability and
+maintainability are more important than speed.
+
+## Why would we want to do pattern matching and substitution with parsers instead of regular expressions?
+
+* Monadic parsers have a nicer syntax than
+  [regular expressions](https://en.wikipedia.org/wiki/Regular_expression),
+  which are notoriously
+  [difficult to read](https://en.wikipedia.org/wiki/Write-only_language).
+
+* Regular expressions can do “group capture” on sections of the matched
+  pattern, but they can only return stringy lists of the capture groups. Parsers
+  can construct typed data structures based on the capture groups, guaranteeing
+  no disagreement between the pattern rules and the rules that we're using
+  to build data structures based on the pattern matches.
+
+  For example, consider
+  scanning a string for numbers. A lot of different things can look like a number,
+  and can have leading plus or minus signs, or be in scientific notation, or
+  have commas, or whatever. If we try to parse all of the numbers out of a string
+  using regular expressions, then we have to make sure that the regular expression
+  and the string-to-number conversion function agree about exactly what is
+  and what isn't a numeric string. We can get into an awkward situation in which
+  the regular expression says it has found a numeric string but the
+  string-to-number conversion function fails. A typed parser will perform both
+  the pattern match and the conversion, so it will never be in that situation.
+  [Parse, don't validate.](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+
+* Regular expressions are only able to pattern-match
+  [regular](https://en.wikipedia.org/wiki/Chomsky_hierarchy#The_hierarchy)
+  grammers.
+  Monadic parsers are able pattern-match context-free grammers.
+
+* The replacement expression for a traditional regular expression-based
+  substitution command is usually just a string template in which
+  the *Nth* “capture group” can be inserted with the syntax `\N`. With
+  this library, instead of a template, we get
+  an `editor` function which can perform any computation, including IO.

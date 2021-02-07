@@ -1,13 +1,4 @@
--- | Finding and replacing `String`s with
--- | [`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
--- | instead of
--- | [`Data.String.Regex`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex).
--- |
--- | We can expect the performance of parser-based find-and-replace to be
--- | noticeably worse than regex-based find-and-replace in a JavaScript
--- | runtime environment. This module is intended for use when the input
--- | size is modest, the pattern is complicated, and readability and
--- | maintainability are more important than speed.
+-- | Running a Parser
 module Text.Parsing.Parser.String.Replace.Run
   ( breakCap
   , breakCapT
@@ -16,19 +7,15 @@ where
 
 import Prelude
 
-import Control.Monad.Rec.Class (class MonadRec, Step(..), tailRecM)
+import Control.Monad.Rec.Class (class MonadRec)
 import Control.Monad.State (get)
-import Control.Plus ((<|>))
 import Data.Either (hush)
-import Data.List (List(..), (:))
-import Data.List.NonEmpty (NonEmptyList, cons')
 import Data.Maybe (Maybe)
 import Data.Newtype (unwrap)
-import Data.String.CodeUnits as CodeUnits
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (Tuple3, tuple3)
 import Text.Parsing.Parser (ParseState(..), ParserT, Parser, runParserT)
-import Text.Parsing.Parser.String (anyChar)
+import Text.Parsing.Parser.String.Replace.Combinator (anyTill)
 
 -- | Monad transformer version of `breakCap`.
 breakCapT

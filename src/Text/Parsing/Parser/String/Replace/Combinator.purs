@@ -1,13 +1,4 @@
--- | Finding and replacing `String`s with
--- | [`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
--- | instead of
--- | [`Data.String.Regex`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex).
--- |
--- | We can expect the performance of parser-based find-and-replace to be
--- | noticeably worse than regex-based find-and-replace in a JavaScript
--- | runtime environment. This module is intended for use when the input
--- | size is modest, the pattern is complicated, and readability and
--- | maintainability are more important than speed.
+-- | Parser Combinators
 module Text.Parsing.Parser.String.Replace.Combinator
   ( match
   , anyTill
