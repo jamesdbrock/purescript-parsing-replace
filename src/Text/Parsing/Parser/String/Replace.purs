@@ -9,5 +9,5 @@ module Text.Parsing.Parser.String.Replace
   )
 where
 
-import Text.Parsing.Parser.String.Replace.Combinator (anyTill, many1Till_, manyTill_, match)
-import Text.Parsing.Parser.String.Replace.Run (breakCap, breakCapT)
+import Text.Parsing.Parser.String.Replace.Combinator (anyTill, match, manyTill_, many1Till_)
+import Text.Parsing.Parser.String.Replace.Run (breakCap, breakCapT, splitCap, splitCapT, streamEdit, streamEditT)
