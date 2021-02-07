@@ -1,6 +1,3 @@
-__parsing-string-replace__ is for finding text patterns, and also for replacing
-or splitting on the found patterns.
-
 __parsing-string-replace__ is for finding text patterns, and also
 replacing or splitting on the found patterns.
 This activity is traditionally done with regular expressions,
@@ -74,3 +71,24 @@ maintainability are more important than speed.
   the *Nth* “capture group” can be inserted with the syntax `\N`. With
   this library, instead of a template, we get
   an `editor` function which can perform any computation, including IO.
+
+## Is this a good idea?
+
+You may have
+[heard it suggested](https://stackoverflow.com/questions/57667534/how-can-i-use-a-parser-in-haskell-to-find-the-locations-of-some-substrings-in-a/57712672#comment101804063_57667534)
+that monadic parsers are better for pattern-matching when
+the input stream is mostly signal, and regular expressions are better
+when the input stream is mostly noise.
+
+The premise of this library is that monadic parsers are great for finding
+small signal patterns in a stream of otherwise noisy text.
+
+Our reluctance to forego the speedup opportunities afforded by restricting
+ourselves to regular grammars is an old superstition about
+opportunities which
+[remain mostly unexploited anyway](https://swtch.com/~rsc/regexp/regexp1.html).
+The performance compromise of allowing stack memory allocation (a.k.a. pushdown
+automata, a.k.a. context-free grammar) was once considered
+[controversial for *general-purpose* programming languages](https://vanemden.wordpress.com/2014/06/18/how-recursion-got-into-programming-a-comedy-of-errors-3/).
+I think we
+can now resolve that controversy the same way for pattern matching languages.
