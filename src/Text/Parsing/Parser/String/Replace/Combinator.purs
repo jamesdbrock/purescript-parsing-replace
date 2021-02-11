@@ -51,7 +51,12 @@ match p = do
 -- |
 -- | Note that this combinator only accepts the type `String`, not any instance
 -- | of the `StringLike` class.
-anyTill :: forall m a. (Monad m) => (MonadRec m) => ParserT String m a -> ParserT String m (Tuple String a)
+anyTill
+  :: forall m a
+   . (Monad m)
+   => (MonadRec m)
+   => ParserT String m a
+   -> ParserT String m (Tuple String a)
 anyTill p = try $ do
   ParseState input1 _ _ <- get
   Tuple input2 t <- tailRecM go unit
@@ -60,7 +65,7 @@ anyTill p = try $ do
   go unit =
     do
       ParseState input2 _ _ <- get
-      t <- try $ p
+      t <- try p
       pure $ Done $ Tuple input2 t
     <|>
     do
@@ -91,3 +96,7 @@ many1Till_ p end = do
   x <- p
   Tuple xs t <- manyTill_ p end
   pure $ Tuple (cons' x xs) t
+
+-- sepCap doesn't make sense as a parser, because after replacement, how
+-- do you know what the new line and column are? Actually I guess that could
+-- be done... backtrack and run positionUpdate.

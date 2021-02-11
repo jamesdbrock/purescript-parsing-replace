@@ -29,7 +29,7 @@ import Data.NonEmpty ((:|))
 import Data.String (null)
 import Data.Traversable (for)
 import Data.Tuple (Tuple(..))
-import Data.Tuple.Nested (Tuple3, tuple3)
+import Data.Tuple.Nested (T3, (/\))
 import Text.Parsing.Parser (ParseState(..), Parser, ParserT, runParserT)
 import Text.Parsing.Parser.String.Replace.Combinator (anyTill)
 
@@ -40,14 +40,16 @@ breakCapT
   => (MonadRec m)
   => ParserT String m a
   -> String
-  -> m (Maybe (Tuple3 String a String))
+  -> m (Maybe (T3 String a String))
 breakCapT sep input = hush <$> runParserT input go
  where
   go = do
     Tuple prefix cap <- anyTill sep
     ParseState suffix _ _ <- get
-    pure $ tuple3 prefix cap suffix
+    pure $ prefix /\ cap /\ suffix
 
+-- | ### Break on and capture one pattern
+-- |
 -- | Find the first occurence of a pattern in a text stream, capture the found
 -- | pattern, and break the input text stream on the found pattern.
 -- |
@@ -71,7 +73,7 @@ breakCapT sep input = hush <$> runParserT input go
 -- | For all `input`, `sep`, if
 -- |
 -- | ```purescript
--- | let (Just (prefix, (infix, _), suffix)) = breakCap (match sep) input
+-- | let (Just (prefix /\ (infix /\ _) /\ suffix)) = breakCap (match sep) input
 -- | ```
 -- |
 -- | then
@@ -83,7 +85,7 @@ breakCap
   :: forall a
    . Parser String a
   -> String
-  -> Maybe (Tuple3 String a String)
+  -> Maybe (T3 String a String)
 breakCap sep input = unwrap $ breakCapT sep input
 
 -- | Monad transformer version of `splitCap`.
@@ -116,26 +118,44 @@ splitCapT sep input =
           pure $ wrap $ Left prefix :| Right result : rest'
  where
   runParse = runParserT input $ do
+    -- Should we do someting about zero-width parses?
     xs <- manyRec (anyTill sep)
     ParseState remain _ _ <- get
     pure $ Tuple xs remain
 
--- There's a problem: The ParseState Position is wrong.
--- splitCapT sep input = go input
---  where
---   go input' = breakCapT sep input >>= case _ of
---     Nothing ->
---       pure $ singleton $ Left input'
---     Just ("" /\ parse_result /\ "" /\ unit) ->
---       pure $ singleton $ Right parse_result
---     Just (prefix /\ parse_result /\ "" /\ unit) ->
---       pure $ cons (Left prefix) $ singleton (Right parse_result)
---     Just ("" /\ parse_result /\ suffix /\ unit) ->
---       map (cons (Right parse_result)) $ go suffix
---     Just (prefix /\ parse_result /\ suffix /\ unit) ->
---       map (cons (Left prefix) <<< cons (Right parse_result)) $ go suffix
 
+-- | ### Split on and capture all patterns
 -- |
+-- | Find all occurences of the pattern `sep`, split the input string, capture
+-- | all the patterns and the splits.
+-- |
+-- | The input string will be split on every leftmost non-overlapping occurence
+-- | of the pattern `sep`. The output list will contain
+-- | the parsed result of input string sections which match the `sep` pattern
+-- | in `Right`, and non-matching sections in `Left`.
+-- |
+-- | #### Access the matched section of text
+-- |
+-- | If you want to capture the matched strings, then combine the pattern
+-- | parser `sep` with the `match` combinator.
+-- |
+-- | With the matched strings, we can reconstruct the input string.
+-- | For all `input`, `sep`, if
+-- |
+-- | ```purescript
+-- | let output = splitCap (match sep) input
+-- | ```
+-- |
+-- | then
+-- |
+-- | ```purescript
+-- | input == fold (either identity fst <$> output)
+-- | ```
+-- |
+-- | #### Beware zero-width parses
+-- |
+-- | If the `sep` parser can succeed without consuming input, for example
+-- | if `sep = lookAhead (string "a")`, then `splitCap` might not halt.
 splitCap
   :: forall a
    . Parser String a
@@ -154,11 +174,40 @@ streamEditT
   -> m String
 streamEditT sep editor input = do
   sections <- splitCapT sep input
+  -- Is this fold1 efficient like mconcat?
   map fold1 $ for sections $ case _ of
     Left l -> pure l
     Right r -> editor r
 
 -- |
+-- | ### Stream editor
+-- |
+-- | Also known as “find-and-replace”, or “match-and-substitute”. Finds all
+-- | of the sections of the stream which match the pattern `sep`, and replaces
+-- | them with the result of the `editor` function.
+-- |
+-- | #### Access the matched section of text in the `editor`
+-- |
+-- | If you want access to the matched string in the `editor` function,
+-- | then combine the pattern parser `sep`
+-- | with `match`. This will effectively change
+-- | the type of the `editor` function to `(String /\ a) -> Text`.
+-- |
+-- | This allows us to write an `editor` function which can choose to not
+-- | edit the match and just leave it as it is. If the `editor` function
+-- | returns the first item in the tuple, then `streamEdit` will not change
+-- | the matched string.
+-- |
+-- | So, for all `sep`:
+-- |
+-- | ```purescript
+-- | streamEdit (match sep) fst ≡ identity
+-- | ```
+-- |
+-- | #### Beware zero-width parses
+-- |
+-- | If the `sep` parser can succeed without consuming input, for example
+-- | if `sep = lookAhead (string "a")`, then `streamEdit` might not halt.
 streamEdit
   :: forall a
    . Parser String a
