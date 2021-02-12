@@ -3,6 +3,7 @@
 -- | instead of
 -- | [`Data.String.Regex`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex).
 -- |
+-- | See the package README for usage examples.
 module Text.Parsing.Parser.String.Replace
   ( module Text.Parsing.Parser.String.Replace.Combinator
   , module Text.Parsing.Parser.String.Replace.Run

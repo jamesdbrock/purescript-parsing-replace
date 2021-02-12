@@ -2,7 +2,8 @@ __parsing-string-replace__ is for finding text patterns, and also
 replacing or splitting on the found patterns.
 This activity is traditionally done with regular expressions,
 but __parsing-string-replace__ uses
-__parsing__ parsers instead for the pattern matching.
+[`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
+parsers instead for the pattern matching.
 
 
 __parsing-string-replace__ can be used in the same sort of __*“pattern capture”*__
