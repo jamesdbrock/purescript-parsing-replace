@@ -5,18 +5,18 @@ but __parsing-string-replace__ uses
 __parsing__ parsers instead for the pattern matching.
 
 
-__parsing-string-replace__ can be used in the same sort of *“pattern capture”*
-or *“find all”* situations in which one would use
-[`Data.String.Regex.match`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:match).
-
-
-__parsing-string-replace__ can be used in the same sort of “stream editing”
-or “search-and-replace” situations in which one would use
-[`Data.String.Regex.replace'`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:replace')
+__parsing-string-replace__ can be used in the same sort of __*“pattern capture”*__
+or __*“find all”*__ situations in which one would use
+[`Data.String.Regex.match`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:match)
 or
 [`Data.String.Regex.search`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:search).
 
-__parsing-string-replace__ can be used in the same sort of “string splitting”
+
+__parsing-string-replace__ can be used in the same sort of __*“stream editing”*__
+or __*“search-and-replace”*__ situations in which one would use
+[`Data.String.Regex.replace'`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:replace').
+
+__parsing-string-replace__ can be used in the same sort of __*“string splitting”*__
 situations in which one would use
 [`Data.String.Regex.split`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:split).
 
@@ -71,6 +71,73 @@ maintainability are more important than speed.
   the *Nth* “capture group” can be inserted with the syntax `\N`. With
   this library, instead of a template, we get
   an `editor` function which can perform any computation, including IO.
+
+## Usage Examples
+
+These usage examples are all implemented in [`test/Main.purs`](test/Main.purs).
+
+### Break strings with `breakCap` and `match`
+
+Find the first pattern match, capture the matched text and the parsed result.
+
+```purescript
+parseInt = some digit >>= fromCharArray >>> fromString >>> maybe (fail "fromString") pure
+breakCap (match parseInt) "abc 123 def"
+```
+```purescript
+Just $ "abc " /\ ("123" /\ 123) /\ " def"
+```
+
+### Find all positions of a pattern with `splitCap`
+
+Find the beginning positions of all pattern matches in the input.
+
+```purescript
+catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
+```
+```purescript
+[(Position { line: 1, column: 2 }),(Position { line: 2, column: 4 })]
+```
+
+### Edit strings in `Effect` in with `streamEditT`
+
+Find an environment variable in curly braces and replace it with its value
+from the environment.
+We can read from the environment because `streamEditT` is running the
+`editor` function in `Effect`.
+
+```purescript
+streamEditT (string "{" *> anyTill (string "}")) (fst >>> lookupEnv >=> fromJust "") "◀ {HOME} ▶"
+```
+```purescript
+"◀ /home/jbrock ▶"
+```
+
+### Count the pattern matches with `splitCapT`
+
+Parse in a `State` monad to remember state in the parser. This
+stateful `letterCount` parser counts
+the number of pattern matches which occur in the input, and also
+tags each match with its index.
+
+```purescript
+letterCount :: ParserT String (State Int) (Tuple Char Int)
+letterCount = do
+  l <- letter
+  i <- lift $ modify (_+1)
+  pure $ l /\ i
+
+flip runState 0 $ splitCapT letterCount "A B"
+```
+```purescript
+[(Right ('A' /\ 1)),(Left " "),(Right ('B' /\ 2))] /\ 2
+```
+
+
+## Alternatives
+
+* https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex
+* https://pursuit.purescript.org/packages/purescript-substitute/
 
 ## Is this a good idea?
 
