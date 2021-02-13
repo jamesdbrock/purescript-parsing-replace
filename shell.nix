@@ -2,7 +2,7 @@
 }:
 let
   easy-ps = import (builtins.fetchGit {
-    url = "https://github.com:justinwoo/easy-purescript-nix.git";
+    url = "https://github.com/justinwoo/easy-purescript-nix.git";
     rev = "1ec689df0adf8e8ada7fcfcb513876307ea34226";
   }) { inherit pkgs; };
 in
