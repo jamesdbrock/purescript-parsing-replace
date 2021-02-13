@@ -1,6 +1,6 @@
 # parsing-string-replace
 
-[![Test](https://github.com/jamesdbrock/purescript-parsing-string-replace/workflows/Test/badge.svg?branch=master)](https://github.com/jamesdbrock/purescript-parsing-string-replace/actions)
+[![Test](https://github.com/jamesdbrock/purescript-parsing-string-replace/workflows/Test/badge.svg?branch=main)](https://github.com/jamesdbrock/purescript-parsing-string-replace/actions)
 [![Pursuit](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/badge)](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/)
 
 __parsing-string-replace__ is for finding text patterns, and also
@@ -133,7 +133,7 @@ Find the beginning positions of all pattern matches in the input.
 catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
 ```
 ```purescript
-[(Position { line: 1, column: 2 }),(Position { line: 2, column: 4 })]
+[Position { line: 1, column: 2 }, Position { line: 2, column: 4 }]
 ```
 
 ### Edit strings in `Effect` in with `streamEditT`
@@ -145,7 +145,7 @@ We can read from the environment because `streamEditT` is running the
 
 ```purescript
 pattern = string "{" *> anyTill (string "}")
-editor  = fst >>> lookupEnv >=> fromJust ""
+editor  = fst >>> lookupEnv >=> fromMaybe "" >>> pure
 streamEditT pattern editor "◀ {HOME} ▶"
 ```
 ```purescript
@@ -169,7 +169,7 @@ letterCount = do
 flip runState 0 $ splitCapT letterCount "A B"
 ```
 ```purescript
-[(Right ('A' /\ 1)),(Left " "),(Right ('B' /\ 2))] /\ 2
+[Right ('A' /\ 1), Left " ", Right ('B' /\ 2)] /\ 2
 ```
 
 
