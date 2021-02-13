@@ -48,7 +48,7 @@ breakCapT sep input = hush <$> runParserT input go
     ParseState suffix _ _ <- get
     pure $ prefix /\ cap /\ suffix
 
--- | ### Break on and capture one pattern
+-- | #### Break on and capture one pattern
 -- |
 -- | Find the first occurence of a pattern in a text stream, capture the found
 -- | pattern, and break the input text stream on the found pattern.
@@ -124,7 +124,7 @@ splitCapT sep input =
     pure $ Tuple xs remain
 
 
--- | ### Split on and capture all patterns
+-- | #### Split on and capture all patterns
 -- |
 -- | Find all occurences of the pattern `sep`, split the input string, capture
 -- | all the patterns and the splits.
@@ -180,7 +180,7 @@ streamEditT sep editor input = do
     Right r -> editor r
 
 -- |
--- | ### Stream editor
+-- | #### Stream editor
 -- |
 -- | Also known as “find-and-replace”, or “match-and-substitute”. Finds all
 -- | of the sections of the stream which match the pattern `sep`, and replaces
@@ -191,7 +191,7 @@ streamEditT sep editor input = do
 -- | If you want access to the matched string in the `editor` function,
 -- | then combine the pattern parser `sep`
 -- | with `match`. This will effectively change
--- | the type of the `editor` function to `(String /\ a) -> Text`.
+-- | the type of the `editor` function to `(String /\ a) -> String`.
 -- |
 -- | This allows us to write an `editor` function which can choose to not
 -- | edit the match and just leave it as it is. If the `editor` function

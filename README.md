@@ -1,3 +1,8 @@
+# parsing-string-replace
+
+[![Test](https://github.com/jamesdbrock/purescript-parsing-string-replace/workflows/Test/badge.svg?branch=master)](https://github.com/jamesdbrock/purescript-parsing-string-replace/actions)
+[![Pursuit](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/badge)](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/)
+
 __parsing-string-replace__ is for finding text patterns, and also
 replacing or splitting on the found patterns.
 This activity is traditionally done with regular expressions,
@@ -5,13 +10,11 @@ but __parsing-string-replace__ uses
 [`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
 parsers instead for the pattern matching.
 
-
 __parsing-string-replace__ can be used in the same sort of __*“pattern capture”*__
 or __*“find all”*__ situations in which one would use
 [`Data.String.Regex.match`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:match)
 or
 [`Data.String.Regex.search`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:search).
-
 
 __parsing-string-replace__ can be used in the same sort of __*“stream editing”*__
 or __*“search-and-replace”*__ situations in which one would use
@@ -71,11 +74,44 @@ maintainability are more important than speed.
   substitution command is usually just a string template in which
   the *Nth* “capture group” can be inserted with the syntax `\N`. With
   this library, instead of a template, we get
-  an `editor` function which can perform any computation, including IO.
+  an `editor` function which can perform any computation, including `Effect`s.
 
 ## Usage Examples
 
-These usage examples are all implemented in [`test/Main.purs`](test/Main.purs).
+These usage examples are implemented in [`test/Main.purs`](test/Main.purs).
+
+### Break strings with `breakCap`
+
+Find the first pattern match and break the input string on the pattern.
+
+```purescript
+breakCap (string "needle") "hay needle hay"
+```
+```purescript
+Just $ "hay " /\ "needle" /\ " hay"
+```
+
+### Split strings with `splitCap`
+
+Split the input string on all pattern matches.
+
+```purescript
+splitCap (string "needle") "hay needle straw needle hay"
+```
+```
+[Left "hay ", Right "needle", Left " straw ", Right "needle", Left " hay"]
+```
+
+### Edit strings with `streamEdit`
+
+Edit all found patterns with an `editor` function.
+
+```purescript
+streamEdit (string "needle") toUpper "hay needle hay"
+```
+```purescript
+"hay NEEDLE hay"
+```
 
 ### Break strings with `breakCap` and `match`
 
@@ -108,7 +144,9 @@ We can read from the environment because `streamEditT` is running the
 `editor` function in `Effect`.
 
 ```purescript
-streamEditT (string "{" *> anyTill (string "}")) (fst >>> lookupEnv >=> fromJust "") "◀ {HOME} ▶"
+pattern = string "{" *> anyTill (string "}")
+editor  = fst >>> lookupEnv >=> fromJust ""
+streamEditT pattern editor "◀ {HOME} ▶"
 ```
 ```purescript
 "◀ /home/jbrock ▶"

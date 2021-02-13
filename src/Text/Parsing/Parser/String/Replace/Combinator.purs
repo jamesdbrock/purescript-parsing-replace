@@ -22,6 +22,10 @@ import Text.Parsing.Parser (ParseState(..), ParserT)
 import Text.Parsing.Parser.Combinators (try)
 import Text.Parsing.Parser.String (anyChar)
 
+-- | The
+-- | [famous `match`](http://www.serpentine.com/blog/2014/05/31/attoparsec/#from-strings-to-buffers-and-cursors)
+-- | combinator.
+-- |
 -- | Return both the result of a parse and the portion of the input that
 -- | was consumed while it was being parsed.
 -- |
@@ -45,7 +49,7 @@ match p = do
 -- | Will fail if no section of the input is parseable. Will not consume input
 -- | on failure. Stack-safe.
 -- |
--- | This combinator is equivalent to `manyTill_ anyChar` but it will be
+-- | This combinator is equivalent to `manyTill_ anyChar`, but it will be
 -- | faster because it returns a slice of the input `String` for the
 -- | section preceding the match instead of a `List Char`.
 -- |
