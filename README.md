@@ -87,6 +87,7 @@ Find the first pattern match and break the input string on the pattern.
 ```purescript
 breakCap (string "needle") "hay needle hay"
 ```
+
 ```purescript
 Just $ "hay " /\ "needle" /\ " hay"
 ```
@@ -98,6 +99,7 @@ Split the input string on all pattern matches.
 ```purescript
 splitCap (string "needle") "hay needle straw needle hay"
 ```
+
 ```
 [Left "hay ", Right "needle", Left " straw ", Right "needle", Left " hay"]
 ```
@@ -109,6 +111,7 @@ Edit all found patterns with an `editor` function.
 ```purescript
 streamEdit (string "needle") toUpper "hay needle hay"
 ```
+
 ```purescript
 "hay NEEDLE hay"
 ```
@@ -121,6 +124,7 @@ Find the first pattern match, capture the matched text and the parsed result.
 parseInt = some digit >>= fromCharArray >>> fromString >>> maybe (fail "fromString") pure
 breakCap (match parseInt) "abc 123 def"
 ```
+
 ```purescript
 Just $ "abc " /\ ("123" /\ 123) /\ " def"
 ```
@@ -132,6 +136,7 @@ Find the beginning positions of all pattern matches in the input.
 ```purescript
 catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
 ```
+
 ```purescript
 [Position { line: 1, column: 2 }, Position { line: 2, column: 4 }]
 ```
@@ -148,6 +153,7 @@ pattern = string "{" *> anyTill (string "}")
 editor  = fst >>> lookupEnv >=> fromMaybe "" >>> pure
 streamEditT pattern editor "◀ {HOME} ▶"
 ```
+
 ```purescript
 "◀ /home/jbrock ▶"
 ```
@@ -168,6 +174,7 @@ letterCount = do
 
 flip runState 0 $ splitCapT letterCount "A B"
 ```
+
 ```purescript
 [Right ('A' /\ 1), Left " ", Right ('B' /\ 2)] /\ 2
 ```
