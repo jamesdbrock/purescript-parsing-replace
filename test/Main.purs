@@ -96,6 +96,18 @@ main = do
     { actual: fold (either identity fst <$> output)
     , expected: "aBaBa"
     }
+  assertEqual' "splitCap8"
+    { actual: splitCap (lookAhead $ string "a") "aa"
+    , expected: wrap $ Right "a" :| Right "a" : Nil
+    }
+  assertEqual' "splitCap8"
+    { actual: splitCap (lookAhead $ string "B") "BaBa"
+    , expected: wrap $ Right "B" :| Left "a" : Right "B" : Right "B" : Left "a" : Nil
+    }
+  assertEqual' "splitCap9"$ let output = splitCap (match $ lookAhead $ string "B") "aBaBa" in
+    { actual: fold (either identity fst <$> output)
+    , expected: "aaa"
+    }
   assertEqual' "streamEdit1"
     { actual: streamEdit (match $ string "B") fst "aBa"
     , expected: "aBa"

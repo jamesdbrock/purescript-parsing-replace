@@ -27,10 +27,12 @@ import Data.Maybe (Maybe)
 import Data.Newtype (unwrap, wrap)
 import Data.NonEmpty ((:|))
 import Data.String (null)
+import Data.String.CodeUnits as CodeUnits
 import Data.Traversable (for)
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (T3, (/\))
 import Text.Parsing.Parser (ParseState(..), Parser, ParserT, runParserT)
+import Text.Parsing.Parser.String (anyChar)
 import Text.Parsing.Parser.String.Combinator (anyTill)
 
 -- | Monad transformer version of `breakCap`. The `sep` parser will run
@@ -119,10 +121,22 @@ splitCapT sep input =
           pure $ wrap $ Left prefix :| Right result : rest'
  where
   runParse = runParserT input $ do
-    -- Should we do someting about zero-width parses?
-    xs <- manyRec (anyTill sep)
+    xs <- manyRec (forceProgress $ anyTill sep)
     ParseState remain _ _ <- get
     pure $ Tuple xs remain
+  -- If the parser succeeds but consumes no input, then force it to skip
+  -- ahead one char.
+  forceProgress p = do
+    ParseState remain0 _ _ <- get
+    x <- p
+    ParseState remain1 _ _ <- get
+    if CodeUnits.length remain0 == CodeUnits.length remain1
+      then -- p succeeded but consumed nothing
+        anyChar *> pure x
+      else
+        pure x
+
+
 
 
 -- | #### Split on and capture all patterns
@@ -153,10 +167,8 @@ splitCapT sep input =
 -- | input == fold (either identity fst <$> output)
 -- | ```
 -- |
--- | #### Beware zero-width parses
--- |
--- | If the `sep` parser can succeed without consuming input, for example
--- | if `sep = lookAhead (string "a")`, then `splitCap` might not halt.
+-- | (This invariant might not hold if `sep` can succeed without consuming
+-- | any input, like if `sep` is a `lookAhead` parser.)
 splitCap
   :: forall a
    . Parser String a
@@ -207,10 +219,8 @@ streamEditT sep editor input = do
 -- | streamEdit (match sep) fst ≡ identity
 -- | ```
 -- |
--- | #### Beware zero-width parses
--- |
--- | If the `sep` parser can succeed without consuming input, for example
--- | if `sep = lookAhead (string "a")`, then `streamEdit` might not halt.
+-- | (This invariant might not hold if `sep` can succeed without consuming
+-- | any input, like if `sep` is a `lookAhead` parser.)
 streamEdit
   :: forall a
    . Parser String a
