@@ -1,5 +1,5 @@
 -- | Functions in this module are *parser combinators*.
-module Text.Parsing.Parser.String.Combinator
+module Text.Parsing.Replace.String.Combinator
   ( match
   , anyTill
   , manyTill_

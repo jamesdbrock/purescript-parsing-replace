@@ -17,8 +17,11 @@ module Text.Parsing.Replace.String
   , splitCapT
   , streamEdit
   , streamEditT
+  , module Text.Parsing.Replace.String.Combinator
   )
 where
+
+import Text.Parsing.Replace.String.Combinator (match, anyTill)
 
 import Prelude
 
@@ -38,7 +41,6 @@ import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (T3, (/\))
 import Text.Parsing.Parser (ParseState(..), Parser, ParserT, runParserT)
 import Text.Parsing.Parser.String (anyChar)
-import Text.Parsing.Parser.String.Combinator (anyTill)
 
 -- | Monad transformer version of `breakCap`. The `sep` parser will run
 -- | in the monad context.
