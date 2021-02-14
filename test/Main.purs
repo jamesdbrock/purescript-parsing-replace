@@ -22,8 +22,8 @@ import Test.Assert (assertEqual')
 import Text.Parsing.Parser (ParserT, fail, position, runParser)
 import Text.Parsing.Parser.Combinators (lookAhead)
 import Text.Parsing.Parser.String (string)
-import Text.Parsing.Replace (anyTill, breakCap, match, splitCap, splitCapT, streamEdit, streamEditT)
 import Text.Parsing.Parser.Token (digit, letter)
+import Text.Parsing.Replace (anyTill, breakCap, match, splitCap, splitCapT, streamEdit, streamEditT)
 
 
 main :: Effect Unit
@@ -119,11 +119,10 @@ main = do
     { actual: show $ fromFoldable $ catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
     , expected: "[(Position { line: 1, column: 2 }),(Position { line: 2, column: 4 })]"
     }
-  -- This test doesn't pass in CI.
-  -- assertEqual' "example3"
-  --   { actual: unsafePerformEffect $ streamEditT (string "{" *> anyTill (string "}")) (fst >>> lookupEnv >=> fromMaybe "" >>> pure) "◀ {HOME} ▶"
-  --   , expected: "◀ /home/jbrock ▶"
-  --   }
+  assertEqual' "example3"
+    { actual: unsafePerformEffect $ streamEditT (string "{" *> anyTill (string "}")) (fst >>> lookupEnv >=> fromMaybe "" >>> pure) "◀ {HOME} ▶"
+    , expected: "◀ " <> fromMaybe "" (unsafePerformEffect (lookupEnv "HOME")) <> " ▶"
+    }
   assertEqual' "example4"
     { actual:
         let letterCount :: ParserT String (State Int) (Tuple Char Int)
