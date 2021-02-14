@@ -1,5 +1,3 @@
--- | # Parser Combinators
--- |
 -- | Functions in this module are *parser combinators*.
 module Text.Parsing.Parser.String.Combinator
   ( match

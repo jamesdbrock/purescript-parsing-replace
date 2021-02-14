@@ -1,10 +1,15 @@
--- | # Running a Parser
+-- | Finding, splitting, and replacing `String`s with
+-- | [`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
+-- | instead of
+-- | [`Data.String.Regex`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex).
 -- |
 -- | Functions in this module are *ways to run a parser* on a `String`,
 -- | like `runParser` or `runParserT`.
 -- |
 -- | Note that these parser runners only accept the type `String`, not any
 -- | instance of the `StringLike` class.
+-- |
+-- | See the package README for usage examples.
 module Text.Parsing.Replace.String
   ( breakCap
   , breakCapT
