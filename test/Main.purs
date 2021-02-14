@@ -22,8 +22,9 @@ import Test.Assert (assertEqual')
 import Text.Parsing.Parser (ParserT, fail, position, runParser)
 import Text.Parsing.Parser.Combinators (lookAhead)
 import Text.Parsing.Parser.String (string)
+import Text.Parsing.Parser.String.Combinator (anyTill, match)
 import Text.Parsing.Parser.Token (digit, letter)
-import Text.Parsing.Replace (anyTill, breakCap, match, splitCap, splitCapT, streamEdit, streamEditT)
+import Text.Parsing.Replace.String (breakCap, splitCap, splitCapT, streamEdit, streamEditT)
 
 
 main :: Effect Unit
