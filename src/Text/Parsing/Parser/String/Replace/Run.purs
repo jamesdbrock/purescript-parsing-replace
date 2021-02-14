@@ -5,7 +5,7 @@
 -- |
 -- | Note that these parser runners only accept the type `String`, not any
 -- | instance of the `StringLike` class.
-module Text.Parsing.Parser.String.Replace.Run
+module Text.Parsing.Replace.String
   ( breakCap
   , breakCapT
   , splitCap
@@ -31,7 +31,7 @@ import Data.Traversable (for)
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (T3, (/\))
 import Text.Parsing.Parser (ParseState(..), Parser, ParserT, runParserT)
-import Text.Parsing.Parser.String.Replace.Combinator (anyTill)
+import Text.Parsing.Parser.String.Combinator (anyTill)
 
 -- | Monad transformer version of `breakCap`. The `sep` parser will run
 -- | in the monad context.

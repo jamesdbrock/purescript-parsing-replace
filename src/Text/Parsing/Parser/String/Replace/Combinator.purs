@@ -1,7 +1,7 @@
 -- | # Parser Combinators
 -- |
 -- | Functions in this module are *parser combinators*.
-module Text.Parsing.Parser.String.Replace.Combinator
+module Text.Parsing.Parser.String.Combinator
   ( match
   , anyTill
   , manyTill_
