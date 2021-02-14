@@ -28,6 +28,12 @@ The test dependencies are specified seperately in `test.dhall`.
 [nix-shell:]$ spago -x test.dhall test
 ```
 
+## Docs
+
+```
+[nix-shell:]$ spago docs
+```
+
 ## Publishing to Pursuit with `spago`
 
 [Publishing with `spago`](https://github.com/purescript/spago#publish-my-library).
