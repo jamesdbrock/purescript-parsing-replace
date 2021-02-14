@@ -1,6 +1,6 @@
 -- | # Parser Combinators
 -- |
--- | Function in this module are *parser combinators*.
+-- | Functions in this module are *parser combinators*.
 module Text.Parsing.Parser.String.Replace.Combinator
   ( match
   , anyTill

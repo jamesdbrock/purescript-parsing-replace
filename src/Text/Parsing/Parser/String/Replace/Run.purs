@@ -33,7 +33,8 @@ import Data.Tuple.Nested (T3, (/\))
 import Text.Parsing.Parser (ParseState(..), Parser, ParserT, runParserT)
 import Text.Parsing.Parser.String.Replace.Combinator (anyTill)
 
--- | Monad transformer version of `breakCap`.
+-- | Monad transformer version of `breakCap`. The `sep` parser will run
+-- | in the monad context.
 breakCapT
   :: forall m a
    . (Monad m)
@@ -88,8 +89,8 @@ breakCap
   -> Maybe (T3 String a String)
 breakCap sep input = unwrap $ breakCapT sep input
 
--- | Monad transformer version of `splitCap`.
--- | Not stack-safe.
+-- | Monad transformer version of `splitCap`. The `sep` parser will run in the
+-- | monad context. Not stack-safe.
 splitCapT
   :: forall m a
    . (Monad m)
@@ -163,7 +164,8 @@ splitCap
   -> NonEmptyList (Either String a)
 splitCap sep input = unwrap $ splitCapT sep input
 
--- | Monad transformer version of `streamEdit`.
+-- | Monad transformer version of `streamEdit`. The `sep` parser and the
+-- | `editor` function will both run in the monad context. Not stack-safe.
 streamEditT
   :: forall m a
    . (Monad m)
@@ -182,9 +184,10 @@ streamEditT sep editor input = do
 -- |
 -- | #### Stream editor
 -- |
--- | Also known as “find-and-replace”, or “match-and-substitute”. Finds all
--- | of the sections of the stream which match the pattern `sep`, and replaces
--- | them with the result of the `editor` function.
+-- | Also known as “find-and-replace”, or “match-and-substitute”. Find all
+-- | of the leftmost non-overlapping sections of the input string which match
+-- | the pattern `sep`, and
+-- | replace them with the result of the `editor` function.
 -- |
 -- | #### Access the matched section of text in the `editor`
 -- |
