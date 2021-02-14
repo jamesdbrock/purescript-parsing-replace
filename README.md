@@ -1,26 +1,26 @@
-# parsing-string-replace
+# purescript-parsing-replace
 
-[![Test](https://github.com/jamesdbrock/purescript-parsing-string-replace/workflows/Test/badge.svg?branch=main)](https://github.com/jamesdbrock/purescript-parsing-string-replace/actions)
-[![Pursuit](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/badge)](http://pursuit.purescript.org/packages/purescript-parsing-string-replace/)
+[![Test](https://github.com/jamesdbrock/purescript-parsing-replace/workflows/Test/badge.svg?branch=main)](https://github.com/jamesdbrock/purescript-parsing-replace/actions)
+[![Pursuit](http://pursuit.purescript.org/packages/purescript-parsing-replace/badge)](http://pursuit.purescript.org/packages/purescript-parsing-replace/)
 
-__parsing-string-replace__ is for finding text patterns, and also
+__parsing-replace__ is for finding text patterns, and also
 replacing or splitting on the found patterns.
 This activity is traditionally done with regular expressions,
-but __parsing-string-replace__ uses
+but __parsing-replace__ uses
 [`Text.Parsing.Parser.String`](https://pursuit.purescript.org/packages/purescript-parsing/docs/Text.Parsing.Parser.String)
 parsers instead for the pattern matching.
 
-__parsing-string-replace__ can be used in the same sort of __*“pattern capture”*__
+__parsing-replace__ can be used in the same sort of __*“pattern capture”*__
 or __*“find all”*__ situations in which one would use
 [`Data.String.Regex.match`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:match)
 or
 [`Data.String.Regex.search`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:search).
 
-__parsing-string-replace__ can be used in the same sort of __*“stream editing”*__
+__parsing-replace__ can be used in the same sort of __*“stream editing”*__
 or __*“search-and-replace”*__ situations in which one would use
 [`Data.String.Regex.replace'`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:replace').
 
-__parsing-string-replace__ can be used in the same sort of __*“string splitting”*__
+__parsing-replace__ can be used in the same sort of __*“string splitting”*__
 situations in which one would use
 [`Data.String.Regex.split`](https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex#v:split).
 
