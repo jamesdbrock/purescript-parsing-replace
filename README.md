@@ -66,15 +66,17 @@ maintainability are more important than speed.
   [Parse, don't validate.](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
 
 * Regular expressions are only able to pattern-match
-  [regular](https://en.wikipedia.org/wiki/Chomsky_hierarchy#The_hierarchy)
-  grammers.
-  Monadic parsers are able pattern-match context-free grammers.
+  [regular grammars](https://en.wikipedia.org/wiki/Chomsky_hierarchy#The_hierarchy).
+  Monadic parsers are able pattern-match context-free (or context-sensitive)
+  grammars.
 
 * The replacement expression for a traditional regular expression-based
   substitution command is usually just a string template in which
   the *Nth* “capture group” can be inserted with the syntax `\N`. With
   this library, instead of a template, we get
   an `editor` function which can perform any computation, including `Effect`s.
+
+[![Perl Problems](https://imgs.xkcd.com/comics/perl_problems.png)](https://xkcd.com/1171/)
 
 ## Usage Examples
 
@@ -141,6 +143,29 @@ catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
 [Position { line: 1, column: 2 }, Position { line: 2, column: 4 }]
 ```
 
+### Find balanced parentheses with `splitCap`
+
+Find groups of balanced nested parentheses. This pattern is an example of
+a “context-free” grammar, a pattern that
+[can't be expressed by a regular expression](https://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454).
+We can express the pattern with a recursive parser.
+
+```purescript
+balancedParens :: Parser String Unit
+balancedParens = do
+  void $ char '('
+  void $ manyTill
+    (void (noneOf ['(',')']) <|> balancedParens)
+    (char ')')
+  pure unit
+
+rmap fst <$> splitCap (match balancedParens) "((🌼)) (()())"
+```
+
+```purescript
+[Right "((🌼))", Left " ", Right "(()())"]
+```
+
 ### Edit strings in `Effect` in with `streamEditT`
 
 Find an environment variable in curly braces and replace it with its value
@@ -201,7 +226,7 @@ ourselves to regular grammars is an old superstition about
 opportunities which
 [remain mostly unexploited anyway](https://swtch.com/~rsc/regexp/regexp1.html).
 The performance compromise of allowing stack memory allocation (a.k.a. pushdown
-automata, a.k.a. context-free grammar) was once considered
+automata, a.k.a. context-free grammar, a.k.a. recursion) was once considered
 [controversial for *general-purpose* programming languages](https://vanemden.wordpress.com/2014/06/18/how-recursion-got-into-programming-a-comedy-of-errors-3/).
 I think we
 can now resolve that controversy the same way for pattern matching languages.

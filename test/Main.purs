@@ -2,9 +2,10 @@ module Test.Main where
 
 import Prelude
 
+import Control.Alt ((<|>))
 import Control.Monad.State (State, lift, modify, runState)
 import Data.Array (fromFoldable, some)
-import Data.Bifunctor (lmap)
+import Data.Bifunctor (lmap, rmap)
 import Data.Either (Either(..), either, hush)
 import Data.Int (fromString)
 import Data.List (List(..), fold, (:))
@@ -19,12 +20,12 @@ import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
 import Node.Process (lookupEnv)
 import Test.Assert (assertEqual')
-import Text.Parsing.Parser (ParserT, fail, position, runParser)
-import Text.Parsing.Parser.Combinators (lookAhead)
-import Text.Parsing.Parser.String (string)
-import Text.Parsing.Replace.String.Combinator (anyTill, match)
+import Text.Parsing.Parser (ParserT, Parser, fail, position, runParser)
+import Text.Parsing.Parser.Combinators (lookAhead, manyTill)
+import Text.Parsing.Parser.String (char, noneOf, string)
 import Text.Parsing.Parser.Token (digit, letter)
 import Text.Parsing.Replace.String (breakCap, splitCap, splitCapT, streamEdit, streamEditT)
+import Text.Parsing.Replace.String.Combinator (anyTill, match)
 
 
 main :: Effect Unit
@@ -146,4 +147,17 @@ main = do
         in
         lmap fromFoldable $ flip runState 0 $ splitCapT letterCount "A B"
     , expected: [(Right ('A' /\ 1)),(Left " "),(Right ('B' /\ 2))] /\ 2
+    }
+  assertEqual' "example5"
+    { actual:
+        let balancedParens :: Parser String Unit
+            balancedParens = do
+              void $ char '('
+              void $ manyTill
+                (void (noneOf ['(',')']) <|> balancedParens)
+                (char ')')
+              pure unit
+        in
+        fromFoldable $ rmap fst <$> splitCap (match balancedParens) "((🌼)) (()())"
+    , expected: [Right "((🌼))", Left " ", Right "(()())"]
     }
