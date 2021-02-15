@@ -123,7 +123,9 @@ streamEdit (string "needle") toUpper "hay needle hay"
 Find the first pattern match, capture the matched text and the parsed result.
 
 ```purescript
+parseInt :: Parser String Int
 parseInt = some digit >>= fromCharArray >>> fromString >>> maybe (fail "fromString") pure
+
 breakCap (match parseInt) "abc 123 def"
 ```
 
@@ -136,7 +138,7 @@ Just $ "abc " /\ ("123" /\ 123) /\ " def"
 Find the beginning positions of all pattern matches in the input.
 
 ```purescript
-catMaybes $ hush <$> splitCap (position <* string "A") ".A...\n...A."
+catMaybes $ hush <$> splitCap (position <* string "𝝺") ".𝝺...\n...𝝺."
 ```
 
 ```purescript

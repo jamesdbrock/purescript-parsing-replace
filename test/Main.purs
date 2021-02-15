@@ -120,7 +120,8 @@ main = do
     }
   assertEqual' "example0"
     { actual:
-        let parseInt = some digit >>= fromCharArray >>> fromString >>> maybe (fail "fromString") pure
+        let parseInt :: Parser String Int
+            parseInt = some digit >>= fromCharArray >>> fromString >>> maybe (fail "fromString") pure
         in
         breakCap (match parseInt) "abc 123 def"
     , expected: Just $ "abc " /\ ("123" /\ 123) /\ " def"
