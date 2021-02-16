@@ -210,7 +210,15 @@ flip runState 0 $ splitCapT letterCount "A B"
 * https://pursuit.purescript.org/packages/purescript-strings/docs/Data.String.Regex
 * https://pursuit.purescript.org/packages/purescript-substitute/
 
-## Is this a good idea?
+## FAQ
+
+### How do we repeat a pattern “non-greedily?”
+
+…like in regex where we would repeat pattern `p` non-greedily by writing `p*?`?
+
+`manyTill_ p q` where `q` is the entire rest of the parser.
+
+### Is this a good idea?
 
 You may have
 [heard it suggested](https://stackoverflow.com/questions/57667534/how-can-i-use-a-parser-in-haskell-to-find-the-locations-of-some-substrings-in-a/57712672#comment101804063_57667534)
