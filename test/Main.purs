@@ -22,7 +22,7 @@ import Node.Process (lookupEnv)
 import Test.Assert (assertEqual')
 import Text.Parsing.Parser (ParserT, Parser, fail, position, runParser)
 import Text.Parsing.Parser.Combinators (lookAhead, manyTill)
-import Text.Parsing.Parser.String (anyChar, char, noneOf, string)
+import Text.Parsing.Parser.String (anyChar, char, string)
 import Text.Parsing.Parser.Token (digit, letter)
 import Text.Parsing.Replace.String (breakCap, splitCap, splitCapT, streamEdit, streamEditT)
 import Text.Parsing.Replace.String.Combinator (anyTill, match)
@@ -154,9 +154,7 @@ main = do
         let balancedParens :: Parser String Unit
             balancedParens = do
               void $ char '('
-              void $ manyTill
-                (balancedParens <|> void anyChar)
-                (char ')')
+              void $ manyTill (balancedParens <|> void anyChar) (char ')')
               pure unit
         in
         fromFoldable $ rmap fst <$> splitCap (match balancedParens) "((🌼)) (()())"
