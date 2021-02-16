@@ -156,9 +156,7 @@ We can express the pattern with a recursive parser.
 balancedParens :: Parser String Unit
 balancedParens = do
   void $ char '('
-  void $ manyTill
-    (void (noneOf ['(',')']) <|> balancedParens)
-    (char ')')
+  void $ manyTill (balancedParens <|> void anyChar) (char ')')
   pure unit
 
 rmap fst <$> splitCap (match balancedParens) "((🌼)) (()())"
