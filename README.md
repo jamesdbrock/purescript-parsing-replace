@@ -67,7 +67,7 @@ maintainability are more important than speed.
 
 * Regular expressions are only able to pattern-match
   [regular grammars](https://en.wikipedia.org/wiki/Chomsky_hierarchy#The_hierarchy).
-  Monadic parsers are able pattern-match context-free (by recursion) 
+  Monadic parsers are able pattern-match context-free (by recursion)
   or context-sensitive (by monad transformer) grammars.
 
 * The replacement expression for a traditional regular expression-based
@@ -239,3 +239,4 @@ automata, a.k.a. context-free grammar, a.k.a. recursion) was once considered
 [controversial for *general-purpose* programming languages](https://vanemden.wordpress.com/2014/06/18/how-recursion-got-into-programming-a-comedy-of-errors-3/).
 I think we
 can now resolve that controversy the same way for pattern matching languages.
+
