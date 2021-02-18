@@ -67,8 +67,8 @@ maintainability are more important than speed.
 
 * Regular expressions are only able to pattern-match
   [regular grammars](https://en.wikipedia.org/wiki/Chomsky_hierarchy#The_hierarchy).
-  Monadic parsers are able pattern-match context-free (or context-sensitive)
-  grammars.
+  Monadic parsers are able pattern-match context-free (by recursion) 
+  or context-sensitive (by monad transformer) grammars.
 
 * The replacement expression for a traditional regular expression-based
   substitution command is usually just a string template in which
@@ -190,6 +190,7 @@ stateful `letterCount` parser counts
 the number of pattern matches which occur in the input, and also
 tags each match with its index.
 
+
 ```purescript
 letterCount :: ParserT String (State Int) (Tuple Char Int)
 letterCount = do
@@ -212,7 +213,7 @@ flip runState 0 $ splitCapT letterCount "A B"
 
 ## FAQ
 
-### How do we repeat a pattern “non-greedily?”
+### How do we repeat a “non-greedy” pattern?
 
 …like in regex where we would repeat pattern `p` non-greedily by writing `p*?`?
 
