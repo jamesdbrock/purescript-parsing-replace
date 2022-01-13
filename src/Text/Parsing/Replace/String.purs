@@ -6,9 +6,6 @@
 -- | Functions in this module are *ways to run a parser* on a `String`,
 -- | like `runParser` or `runParserT`.
 -- |
--- | Note that these parser runners only accept the type `String`, not any
--- | instance of the `StringLike` class.
--- |
 -- | See the package README for usage examples.
 module Text.Parsing.Replace.String
   ( breakCap
