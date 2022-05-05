@@ -1,4 +1,6 @@
-# purescript-parsing-replace
+# DEPRECATED purescript-parsing-replace
+
+## This package is DEPRECATED because it has been included in the __purescript-parsing__ package v9.0.0 as module [__Parsing.String.Replace__](https://pursuit.purescript.org/packages/purescript-parsing/docs/Parsing.String.Replace)
 
 [![Test](https://github.com/jamesdbrock/purescript-parsing-replace/workflows/Test/badge.svg?branch=main)](https://github.com/jamesdbrock/purescript-parsing-replace/actions)
 [![Pursuit](http://pursuit.purescript.org/packages/purescript-parsing-replace/badge)](http://pursuit.purescript.org/packages/purescript-parsing-replace/)
