@@ -15,5 +15,10 @@ in conf //
   , dependencies = conf.dependencies #
     [ "assert"
     , "node-process"
+    , "arrays"
+    , "bifunctors"
+    , "effect"
+    , "integers"
+
     ]
   }

@@ -9,12 +9,12 @@
 let
   easy-ps = import (builtins.fetchGit {
     url = "https://github.com/justinwoo/easy-purescript-nix.git";
-    rev = "47bdc016c7d56e987ca1aca690b1d6c9816a8584";
+    rev = "0ad5775c1e80cdd952527db2da969982e39ff592";
   }) { inherit pkgs; };
 in
 pkgs.mkShell {
   buildInputs = [
-    easy-ps.purs-0_13_8
+    easy-ps.purs-0_14_7
     easy-ps.spago
     easy-ps.pulp
     pkgs.nodejs-14_x

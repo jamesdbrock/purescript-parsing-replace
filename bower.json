@@ -14,6 +14,18 @@
         "output"
     ],
     "dependencies": {
-        "purescript-parsing": "^v5.1.0"
+        "purescript-control": "^v5.0.0",
+        "purescript-either": "^v5.0.0",
+        "purescript-foldable-traversable": "^v5.0.1",
+        "purescript-lists": "^v6.0.1",
+        "purescript-maybe": "^v5.0.0",
+        "purescript-newtype": "^v4.0.0",
+        "purescript-nonempty": "^v6.1.0",
+        "purescript-parsing": "^v8.4.0",
+        "purescript-prelude": "^v5.0.1",
+        "purescript-strings": "^v5.0.0",
+        "purescript-tailrec": "^v5.0.1",
+        "purescript-transformers": "^v5.2.0",
+        "purescript-tuples": "^v6.0.1"
     }
 }

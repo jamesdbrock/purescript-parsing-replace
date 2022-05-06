@@ -2,7 +2,19 @@
 -}
 { name = "parsing-replace"
 , dependencies =
-  [ "parsing"
+  [ "control"
+  , "either"
+  , "foldable-traversable"
+  , "lists"
+  , "maybe"
+  , "newtype"
+  , "nonempty"
+  , "parsing"
+  , "prelude"
+  , "strings"
+  , "tailrec"
+  , "transformers"
+  , "tuples"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs" ]

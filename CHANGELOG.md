@@ -2,11 +2,15 @@
 
 Notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.3
+## v2.0.1
 
 Deprecate, move to https://pursuit.purescript.org/packages/purescript-parsing/9.0.0/docs/Parsing.String.Replace
 
-There will be no purs v0.15.x release for this package.
+There will be no PureScript v0.15.x release for this package.
+
+## v2.0.0
+
+PursScript v0.14
 
 ## v1.0.2
 

@@ -18,7 +18,7 @@ import Data.String.CodeUnits as CodeUnits
 import Data.Tuple (Tuple(..))
 import Text.Parsing.Parser (ParseState(..), ParserT)
 import Text.Parsing.Parser.Combinators (try)
-import Text.Parsing.Parser.String (anyChar)
+import Text.Parsing.Parser.String (anyCodePoint)
 
 -- | The
 -- | [famous `match`](http://www.serpentine.com/blog/2014/05/31/attoparsec/#from-strings-to-buffers-and-cursors)
@@ -73,7 +73,7 @@ anyTill p = try $ do
     do
     -- Why does `anyChar` use `CodeUnit.uncons`?
     -- https://github.com/purescript-contrib/purescript-parsing/issues/109
-      _ <- anyChar
+      _ <- anyCodePoint
       pure $ Loop unit
 
 -- | Parse several phrases until the specified terminator matches.
