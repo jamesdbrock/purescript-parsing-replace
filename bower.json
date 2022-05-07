@@ -27,5 +27,9 @@
         "purescript-tailrec": "^v5.0.1",
         "purescript-transformers": "^v5.2.0",
         "purescript-tuples": "^v6.0.1"
-    }
+    },
+    "keywords": [
+      "pursuit-deprecated"
+    ]
 }
+
